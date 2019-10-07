@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
@@ -9,11 +10,13 @@ public class Servidor extends JFrame {
 
     //Declaracion de un socket
     private Socket socket;
-    //Declaracion de un Socket servidro
+    //Declaracion de un Socket servidor
     private ServerSocket servidor;
     //Declaracion de un flujo de entrada
     private ObjectInputStream flujo_entrada;
     JLabel lblTitulo = new JLabel();
+    JLabel lblEncabezado = new JLabel();
+    JLabel lblFuncion = new JLabel();
     JLabel lblMensaje = new JLabel();
 
     /** Crea una nueva intancia para el servidor */
@@ -36,16 +39,23 @@ public class Servidor extends JFrame {
         //Es necesario declara un try ya que es posible que el codigo en la
         try{
             //Se establece el tamaño de la ventana
-            setSize(390,180);
+            setSize(390,190);
             setTitle("Servidor");
             //Manda a la pantalla la cadena Servidor concatenandole la direccion local del equipo mas una cadena que dice listo y escuchando
             lblTitulo.setText("Servidor ["+ InetAddress.getLocalHost().getHostAddress()+"] listo y escuchando...");
+            lblEncabezado.setText("Función:                                              Mensaje:");
             //Agrega el control label a la ventana
             add(lblTitulo);
-            add(lblMensaje);
+            add(lblEncabezado);
             //Asigna las coordenadas en donde aparece en la ventana, junto con el tamaño del control
             lblTitulo.reshape(10,1,250,20);
-            lblMensaje.reshape(10,30,355,70);
+            lblEncabezado.reshape(10,20,250,20);
+            lblFuncion.reshape(10,40,170,100);
+            lblMensaje.reshape(195,40,170,100);
+            lblFuncion.setBorder(BorderFactory.createBevelBorder(1));
+            lblMensaje.setBorder(BorderFactory.createBevelBorder(1));
+            add(lblFuncion);
+            add(lblMensaje);
             //Muestra la ventana
             setLayout(null);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,7 +73,11 @@ public class Servidor extends JFrame {
         }
         //regresa el mensaje
         lblTitulo.setText("Mensaje recibido:");
-        lblMensaje.setText(mensaje);
+        if (mensaje.contains("@gato://")){
+            lblFuncion.setText(mensaje.substring(8));
+        }else{
+            lblMensaje.setText(mensaje);
+        }
     }
     public void cerrarSocket() {
         try {
